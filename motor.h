@@ -1,15 +1,20 @@
+// Represents a motor in a network
 class Motor
 {
 public:
     Motor(int pin1, int pin2, int enable)
     {
+        // Save the pins
         this->pin1 = pin1;
         this->pin2 = pin2;
         this->enable = enable;
+        // Set the pins as outputs
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
+        // Initialise the speed to 0
         setSpeed(0);
+        // Stop the motor
         stop();
     }
 
@@ -33,22 +38,28 @@ public:
 
     void setSpeed(int speed)
     {
+        // Save the speed
         this->speed = speed;
+        // Set the speed using PWM
         analogWrite(enable, speed);
     }
 
     int getSpeed()
     {
+        // Return the speed
         return speed;
     }
 
 private:
+    // The speed of the motor
     int speed;
+    // Pins for the motor
     int pin1;
     int pin2;
     int enable;
 };
 
+// Represents a network of motors
 class MotorNetwork
 {
 public:
@@ -60,23 +71,43 @@ public:
 
     void forward()
     {
+        //   +----+
+        // ^ |    | ^
+        // | |    | |
+        //   |    |
+        //   +----+
         leftMotor.forward();
         rightMotor.forward();
     }
 
     void backward()
     {
+        //   +----+
+        //   |    |
+        // | |    | |
+        // v |    | v
+        //   +----+
         leftMotor.backward();
         rightMotor.backward();
     }
 
     void left()
     {
+        //   +----+
+        //   |    | ^
+        // | |    | |
+        // v |    |
+        //   +----+
         leftMotor.backward();
         rightMotor.forward();
     }
     void right()
     {
+        //   +----+
+        // ^ |    |
+        // | |    | |
+        //   |    | v
+        //   +----+
         leftMotor.forward();
         rightMotor.backward();
     }

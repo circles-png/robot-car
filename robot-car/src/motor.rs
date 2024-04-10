@@ -6,6 +6,7 @@ use arduino_hal::{
     simple_pwm::{PwmPinOps, Timer0Pwm},
 };
 
+// Represents a motor
 pub struct Motor<EnablePin>
 where
     EnablePin: PwmPinOps<Timer0Pwm>,
@@ -26,13 +27,16 @@ where
         pin2: Pin<Output>,
         mut enable: Pin<PwmOutput<Timer0Pwm>, EnablePin>,
     ) -> Self {
+        // Enable the PWM
         enable.enable();
+        // Create the motor
         let mut motor = Self {
             pin1,
             pin2,
             enable,
             speed: 0,
         };
+        // Stop the motor
         motor.stop();
         motor
     }
