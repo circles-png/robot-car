@@ -119,4 +119,13 @@ class Motor {
         digitalWrite(pin1, false);
         digitalWrite(pin2, true);
     }
+
+    void stop() {
+         digitalWrite(pin1, false);
+        digitalWrite(pin2, false);
+    }
+
+    void setSpeed(int speed) {
+        
+    }
 };
