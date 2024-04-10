@@ -11,46 +11,110 @@ public:
     void setSpeed(int speed);
     int getSpeed();
 
-private:
-    int speed = 0;
-
     Motor(int pin1, int pin2, int enable)
     {
-        this->pin1 = pin1;
-        this->pin2 = pin2;
-        this->enable = enable;
+        pin1 = pin1;
+        pin2 = pin2;
+        enable = enable;
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
+        setSpeed(1023);
         stop();
     }
 
     void forward()
     {
-        digitalWrite(this->pin1, true);
-        digitalWrite(this->pin2, false);
+        digitalWrite(pin1, true);
+        digitalWrite(pin2, false);
     }
 
     void backward()
     {
-        digitalWrite(this->pin1, false);
-        digitalWrite(this->pin2, true);
+        digitalWrite(pin1, false);
+        digitalWrite(pin2, true);
     }
 
     void stop()
     {
-        digitalWrite(this->pin1, false);
-        digitalWrite(this->pin2, false);
+        digitalWrite(pin1, false);
+        digitalWrite(pin2, false);
     }
 
     void setSpeed(int speed)
     {
-        this->speed = speed;
+        speed = speed;
         analogWrite(enable, speed);
     }
 
     int getSpeed()
     {
-        return this->speed;
+        return speed;
+    }
+
+private:
+    int speed = 0;
+};
+
+class MotorNetwork
+{
+public:
+    MotorNetwork(Motor left, Motor right);
+    Motor left;
+    Motor right;
+    void forward();
+    void backward();
+    void left();
+    void right();
+    void stop();
+    void setSpeed(int speed);
+    int getSpeed();
+
+    MotorNetwork(Motor left, Motor right): left(left), right(right)
+    {
+        left = left;
+        right = right;
+        stop();
+    }
+
+    void forward()
+    {
+        left.forward();
+        right.forward();
+    }
+
+    void backward()
+    {
+        left.backward();
+        right.backward();
+    }
+
+    void left()
+    {
+        left.backward();
+        right.forward();
+    }
+
+    void right()
+    {
+        left.forward();
+        right.backward();
+    }
+
+    void stop()
+    {
+        left.stop();
+        right.stop();
+    }
+
+    void setSpeed(int speed)
+    {
+        left.setSpeed(speed);
+        right.setSpeed(speed);
+    }
+
+    int getSpeed()
+    {
+        return left.getSpeed();
     }
 };
