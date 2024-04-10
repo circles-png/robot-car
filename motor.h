@@ -9,7 +9,7 @@ public:
     void forward(); // Moves the motor forward
     void backward(); // Moves the motor backward
     void stop(); // Stops motor
-    void setSpeed(int speed);
+    void setSpeed(int speed); /
     int getSpeed();
 
 private:
