@@ -86,3 +86,13 @@ void right() {
     motorABackward();
     motorBForward();
 }
+
+class Motor {
+    public:
+        int pin1;
+        int pin2;
+        int enable;
+        void forward();
+        void backward();
+        void stop();
+}
