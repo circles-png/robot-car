@@ -33,7 +33,7 @@ public:
 
     void setSpeed(int speed)
     {
-        speed = speed;
+        this->speed = speed;
         analogWrite(enable, speed);
     }
 
