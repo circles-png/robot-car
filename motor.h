@@ -13,7 +13,7 @@ public:
     int getSpeed();
 
 private:
-    int speed = 0;
+    int speed = 0; // Sets inital speed to zero
 };
 class MotorNetwork
 {
