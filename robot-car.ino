@@ -101,7 +101,7 @@ class Motor {
         void stop();
 
     private:
-        int speed;
+        int speed = 0;
 
     Motor(int pin1, int pin2, int enable) {
         this -> pin1 = pin1;
