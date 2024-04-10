@@ -2,10 +2,10 @@
 
 #define ENA 6
 #define ENB 5
-#define MOTOR_A_1 13
-#define MOTOR_A_2 12
-#define MOTOR_B_1 11
-#define MOTOR_B_2 10
+#define MOTOR_A_1 11
+#define MOTOR_A_2 10
+#define MOTOR_B_1 9
+#define MOTOR_B_2 8
 
 MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_2, ENB));
 

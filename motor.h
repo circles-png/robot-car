@@ -1,36 +1,107 @@
-// This class represents a motor
 class Motor
 {
 public:
-    // Constructor for the Motor class
-    Motor(
-        int pin1,  // Pin 1 of the motor
-        int pin2,  // Pin 2 of the motor
-        int enable // Enable pin. Must be a PWM pin (3, 5, 6, 9, 10, or 11 on the Arduino Uno)
-    );
-    int pin1; // Connection on the left terminal block of the motor
-    int pin2; // Connection on the right terminal block of the motor
+    int pin1;
+    int pin2;
     int enable;
-    void forward();
-    void backward();
-    void stop();
-    void setSpeed(int speed);
-    int getSpeed();
+
+    Motor(int pin1, int pin2, int enable)
+    {
+        pin1 = pin1;
+        pin2 = pin2;
+        enable = enable;
+        pinMode(pin1, OUTPUT);
+        pinMode(pin2, OUTPUT);
+        pinMode(enable, OUTPUT);
+        setSpeed(1023);
+        stop();
+    }
+
+    void forward()
+    {
+        digitalWrite(pin1, true);
+        digitalWrite(pin2, false);
+    }
+
+    void backward()
+    {
+        digitalWrite(pin1, false);
+        digitalWrite(pin2, true);
+    }
+
+    void stop()
+    {
+        digitalWrite(pin1, false);
+        digitalWrite(pin2, false);
+    }
+
+    void setSpeed(int speed)
+    {
+        speed = speed;
+        analogWrite(enable, speed);
+    }
+
+    int getSpeed()
+    {
+        return speed;
+    }
 
 private:
-    int speed = 0; // Sets inital speed to zero
+    int speed = 0;
 };
+
 class MotorNetwork
 {
 public:
-    MotorNetwork(Motor left, Motor right);
-    Motor left;
-    Motor right;
-    void forward();
-    void backward();
-    void left();
-    void right();
-    void stop();
-    void setSpeed(int speed);
-    int getSpeed();
+    MotorNetwork(Motor left, Motor right) : leftMotor(left), rightMotor(right)
+    {
+        leftMotor = left;
+        rightMotor = right;
+        stop();
+    }
+
+    void forward()
+    {
+        leftMotor.forward();
+        rightMotor.forward();
+    }
+
+    void backward()
+    {
+        leftMotor.backward();
+        rightMotor.backward();
+    }
+
+    void left()
+    {
+        leftMotor.backward();
+        rightMotor.forward();
+    }
+
+    void right()
+    {
+        leftMotor.forward();
+        rightMotor.backward();
+    }
+
+    void stop()
+    {
+        leftMotor.stop();
+        rightMotor.stop();
+    }
+
+    void setSpeed(int speed)
+    {
+        leftMotor.setSpeed(speed);
+        rightMotor.setSpeed(speed);
+    }
+
+    int getSpeed()
+    {
+        return leftMotor.getSpeed();
+    }
+
+private:
+    Motor leftMotor;
+    Motor rightMotor;
 };
