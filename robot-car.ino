@@ -5,7 +5,8 @@
 #define MOTOR_B_1 11
 #define MOTOR_B_2 10
 
-void setup() {
+void setup()
+{
     pinMode(ENA, OUTPUT);
     pinMode(ENB, OUTPUT);
     pinMode(MOTOR_A_1, OUTPUT);
@@ -20,86 +21,102 @@ void setup() {
     digitalWrite(MOTOR_B_2, false);
 }
 
-void loop() {
+void loop()
+{
     forward();
 }
 
-void motorAForward() {
+void motorAForward()
+{
     digitalWrite(MOTOR_A_1, true);
     digitalWrite(MOTOR_A_2, false);
 }
 
-void motorABackward() {
+void motorABackward()
+{
     digitalWrite(MOTOR_A_1, false);
     digitalWrite(MOTOR_A_2, true);
 }
 
-void motorBForward() {
+void motorBForward()
+{
     digitalWrite(MOTOR_B_1, true);
     digitalWrite(MOTOR_B_2, false);
 }
 
-void motorBBackward() {
+void motorBBackward()
+{
     digitalWrite(MOTOR_B_1, false);
     digitalWrite(MOTOR_B_2, true);
 }
 
-void motorAStop() {
+void motorAStop()
+{
     digitalWrite(MOTOR_A_1, false);
     digitalWrite(MOTOR_A_2, false);
 }
 
-void motorBStop() {
+void motorBStop()
+{
     digitalWrite(MOTOR_B_1, false);
     digitalWrite(MOTOR_B_2, false);
 }
 
-void motorASetSpeed(int speed) {
+void motorASetSpeed(int speed)
+{
     analogWrite(ENA, speed);
 }
 
-void motorBSetSpeed(int speed) {
+void motorBSetSpeed(int speed)
+{
     analogWrite(ENB, speed);
 }
 
-void stop() {
+void stop()
+{
     motorAStop();
     motorBStop();
 }
 
-void forward() {
+void forward()
+{
     motorAForward();
     motorBForward();
 }
 
-void backward() {
+void backward()
+{
     motorABackward();
     motorBBackward();
 }
 
-void left() {
+void left()
+{
     motorAForward();
     motorBBackward();
 }
 
-void right() {
+void right()
+{
     motorABackward();
     motorBForward();
 }
 
-class Motor {
-    public:
-        int pin1;
-        int pin2;
-        int enable;
-        void forward();
-        void backward();
-        void stop();
+class Motor
+{
+public:
+    int pin1;
+    int pin2;
+    int enable;
+    void forward();
+    void backward();
+    void stop();
 
-    private:
-        int speed = 0;
+private:
+    int speed = 0;
 
-    Motor(int pin1, int pin2, int enable) {
+    Motor(int pin1, int pin2, int enable)
+    {
         this->pin1 = pin1;
         this->pin2 = pin2;
         this->enable = enable;
@@ -109,27 +126,32 @@ class Motor {
         digitalWrite(enable, HIGH);
     }
 
-    void forward() {
+    void forward()
+    {
         digitalWrite(pin1, true);
         digitalWrite(pin2, false);
     }
 
-    void backward() {
+    void backward()
+    {
         digitalWrite(pin1, false);
         digitalWrite(pin2, true);
     }
 
-    void stop() {
-         digitalWrite(pin1, false);
+    void stop()
+    {
+        digitalWrite(pin1, false);
         digitalWrite(pin2, false);
     }
 
-    void setSpeed(int speed) {
+    void setSpeed(int speed)
+    {
         this->speed = speed;
         analogWrite(enable, speed);
     }
 
-    int getSpeed() {
+    int getSpeed()
+    {
         return this->speed;
     }
 };
