@@ -100,6 +100,9 @@ class Motor {
         void backward();
         void stop();
 
+    private:
+        int speed;
+
     Motor(int pin1, int pin2, int enable) {
         this -> pin1 = pin1;
         this -> pin2 = pin2;
@@ -126,6 +129,6 @@ class Motor {
     }
 
     void setSpeed(int speed) {
-        
+        this -> speed = speed;
     }
 };
