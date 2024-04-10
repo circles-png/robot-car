@@ -1,0 +1,9 @@
+[package]
+name = "client"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+inquire = "0.7.4"
+pancurses = "0.17.0"
+serialport = "4.3.0"
