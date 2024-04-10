@@ -128,20 +128,20 @@ private:
 
     void forward()
     {
-        digitalWrite(pin1, true);
-        digitalWrite(pin2, false);
+        digitalWrite(this->pin1, true);
+        digitalWrite(this->pin2, false);
     }
 
     void backward()
     {
-        digitalWrite(pin1, false);
-        digitalWrite(pin2, true);
+        digitalWrite(this->pin1, false);
+        digitalWrite(this->pin2, true);
     }
 
     void stop()
     {
-        digitalWrite(pin1, false);
-        digitalWrite(pin2, false);
+        digitalWrite(this->pin1, false);
+        digitalWrite(this->pin2, false);
     }
 
     void setSpeed(int speed)
