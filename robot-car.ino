@@ -102,5 +102,11 @@ class Motor {
 
     Motor(int pin1, int pin2, int enable) {
         this -> pin1 = pin1;
+        this -> pin2 = pin2;
+        this -> enable = enable;
+        pinMode(pin1, OUTPUT);
+        pinMode(pin2, OUTPUT);
+        pinMode(enable, OUTPUT);
+        digitalWrite(enable, HIGH);
     }
 };
