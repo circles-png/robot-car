@@ -111,6 +111,8 @@ public:
     void forward();
     void backward();
     void stop();
+    void getSpeed();
+    void setSpeed(int speed);
 
 private:
     int speed = 0;
