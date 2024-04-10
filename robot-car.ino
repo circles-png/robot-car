@@ -20,10 +20,6 @@ void setup() {
     digitalWrite(MOTOR_B_2, false);
 }
 
-void main() {
-
-}
-
 void loop() {
     forward();
 }
