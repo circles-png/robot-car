@@ -20,6 +20,10 @@ void setup() {
     digitalWrite(MOTOR_B_2, false);
 }
 
+void main() {
+
+}
+
 void loop() {
     forward();
 }
@@ -95,4 +99,8 @@ class Motor {
         void forward();
         void backward();
         void stop();
+
+    Motor(int pin1, int pin2, int enable) {
+        this -> pin1 = pin1;
+    }
 };
