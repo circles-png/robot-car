@@ -1,3 +1,5 @@
+#include "motor.h"
+
 #define ENA 6
 #define ENB 5
 #define MOTOR_A_1 13
@@ -5,153 +7,32 @@
 #define MOTOR_B_1 11
 #define MOTOR_B_2 10
 
+Motor A(MOTOR_A_1, MOTOR_A_2, ENA);
+Motor B(MOTOR_B_1, MOTOR_B_2, ENB);
+
 void setup()
 {
-    pinMode(ENA, OUTPUT);
-    pinMode(ENB, OUTPUT);
-    pinMode(MOTOR_A_1, OUTPUT);
-    pinMode(MOTOR_A_2, OUTPUT);
-    pinMode(MOTOR_B_1, OUTPUT);
-    pinMode(MOTOR_B_2, OUTPUT);
-    digitalWrite(ENA, HIGH);
-    digitalWrite(ENB, HIGH);
-    digitalWrite(MOTOR_A_1, true);
-    digitalWrite(MOTOR_A_2, false);
-    digitalWrite(MOTOR_B_1, true);
-    digitalWrite(MOTOR_B_2, false);
+    Serial.begin(9600);
+    while (!Serial)
+        ;
+    Serial.println("Ready");
 }
 
 void loop()
 {
-    forward();
+    A.forward();
+    B.forward();
+    A.setSpeed(255);
+    B.setSpeed(255);
+    delay(2000);
+
+    A.backward();
+    B.backward();
+    A.setSpeed(255);
+    B.setSpeed(255);
+    delay(2000);
+
+    A.stop();
+    B.stop();
+    delay(2000);
 }
-
-void motorAForward()
-{
-    digitalWrite(MOTOR_A_1, true);
-    digitalWrite(MOTOR_A_2, false);
-}
-
-void motorABackward()
-{
-    digitalWrite(MOTOR_A_1, false);
-    digitalWrite(MOTOR_A_2, true);
-}
-
-void motorBForward()
-{
-    digitalWrite(MOTOR_B_1, true);
-    digitalWrite(MOTOR_B_2, false);
-}
-
-void motorBBackward()
-{
-    digitalWrite(MOTOR_B_1, false);
-    digitalWrite(MOTOR_B_2, true);
-}
-
-void motorAStop()
-{
-    digitalWrite(MOTOR_A_1, false);
-    digitalWrite(MOTOR_A_2, false);
-}
-
-void motorBStop()
-{
-    digitalWrite(MOTOR_B_1, false);
-    digitalWrite(MOTOR_B_2, false);
-}
-
-void motorASetSpeed(int speed)
-{
-    analogWrite(ENA, speed);
-}
-
-void motorBSetSpeed(int speed)
-{
-    analogWrite(ENB, speed);
-}
-
-void stop()
-{
-    motorAStop();
-    motorBStop();
-}
-
-void forward()
-{
-    motorAForward();
-    motorBForward();
-}
-
-void backward()
-{
-    motorABackward();
-    motorBBackward();
-}
-
-void left()
-{
-    motorAForward();
-    motorBBackward();
-}
-
-void right()
-{
-    motorABackward();
-    motorBForward();
-}
-
-class Motor
-{
-public:
-    int pin1;
-    int pin2;
-    int enable;
-    void forward();
-    void backward();
-    void stop();
-
-private:
-    int speed = 0;
-
-    Motor(int pin1, int pin2, int enable)
-    {
-        this->pin1 = pin1;
-        this->pin2 = pin2;
-        this->enable = enable;
-        pinMode(pin1, OUTPUT);
-        pinMode(pin2, OUTPUT);
-        pinMode(enable, OUTPUT);
-        digitalWrite(enable, HIGH);
-    }
-
-    void forward()
-    {
-        digitalWrite(pin1, true);
-        digitalWrite(pin2, false);
-    }
-
-    void backward()
-    {
-        digitalWrite(pin1, false);
-        digitalWrite(pin2, true);
-    }
-
-    void stop()
-    {
-        digitalWrite(pin1, false);
-        digitalWrite(pin2, false);
-    }
-
-    void setSpeed(int speed)
-    {
-        this->speed = speed;
-        analogWrite(enable, speed);
-    }
-
-    int getSpeed()
-    {
-        return this->speed;
-    }
-};
