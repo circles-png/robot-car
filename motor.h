@@ -2,9 +2,14 @@
 class Motor
 {
 public:
-    Motor(int pin1, int pin2, int enable); // Declares the pin and enable integers
-    int pin1;                              // Connection on the left terminal block of the motor
-    int pin2;                              // Connection on the right terminal block of the motor
+    // Constructor for the Motor class
+    Motor(
+        int pin1,  // Pin 1 of the motor
+        int pin2,  // Pin 2 of the motor
+        int enable // Enable pin. Must be a PWM pin (3, 5, 6, 9, 10, or 11 on the Arduino Uno)
+    );
+    int pin1; // Connection on the left terminal block of the motor
+    int pin2; // Connection on the right terminal block of the motor
     int enable;
     void forward();
     void backward();
