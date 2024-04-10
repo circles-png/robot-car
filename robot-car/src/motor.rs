@@ -21,17 +21,20 @@ where
     EnablePin: PwmPinOps<Timer0Pwm>,
 {
     #[must_use]
-    pub const fn new(
+    pub fn new(
         pin1: Pin<Output>,
         pin2: Pin<Output>,
-        enable: Pin<PwmOutput<Timer0Pwm>, EnablePin>,
+        mut enable: Pin<PwmOutput<Timer0Pwm>, EnablePin>,
     ) -> Self {
-        Self {
+        enable.enable();
+        let mut motor = Self {
             pin1,
             pin2,
             enable,
-            speed: u8::MAX,
-        }
+            speed: 0,
+        };
+        motor.stop();
+        motor
     }
 
     pub fn forward(&mut self) {

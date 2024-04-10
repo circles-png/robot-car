@@ -1,5 +1,8 @@
 #![warn(clippy::pedantic, clippy::nursery)]
-use std::time::{Duration, Instant};
+use std::{
+    panic::{set_hook, take_hook},
+    time::{Duration, Instant},
+};
 
 use inquire::Select;
 use pancurses::{endwin, initscr, noecho, Input};
@@ -41,16 +44,12 @@ enum Control {
 fn main() {
     const BAUD_RATE: u32 = 115_200;
     let ports = available_ports().unwrap();
-    let port = Select::new(
+    let name = Select::new(
         "Select a port",
         ports.iter().map(|p| p.port_name.clone()).collect(),
     )
     .prompt()
     .unwrap();
-    let mut port = new(port, BAUD_RATE)
-        .timeout(Duration::from_millis(500))
-        .open()
-        .unwrap();
 
     let window = initscr();
     window.keypad(true);
@@ -58,6 +57,15 @@ fn main() {
     window.nodelay(true);
     let mut speed: u8 = 0;
     let mut last_input_time = Instant::now();
+    let handler = take_hook();
+    set_hook(Box::new(move |info| {
+        endwin();
+        handler(info);
+    }));
+    let mut port = new(name, BAUD_RATE)
+        .timeout(Duration::from_millis(500))
+        .open()
+        .unwrap();
     loop {
         let char = window.getch();
         let control = char.and_then(|char| match char {
@@ -76,11 +84,11 @@ fn main() {
             Some(Control::Left) => Command::Left,
             Some(Control::Right) => Command::Right,
             Some(Control::Faster) => {
-                speed = speed.wrapping_add(10);
+                speed = speed.saturating_add(10);
                 Command::SetSpeed(speed)
             }
             Some(Control::Slower) => {
-                speed = speed.wrapping_sub(10);
+                speed = speed.saturating_sub(10);
                 Command::SetSpeed(speed)
             }
             Some(Control::Quit) => break,
@@ -94,6 +102,8 @@ fn main() {
         if control.is_some() {
             last_input_time = Instant::now();
         }
+        window.clear();
+        window.refresh();
         port.write_all(&[command.to_byte()]).unwrap();
     }
     endwin();

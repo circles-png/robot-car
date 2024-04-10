@@ -9,7 +9,7 @@ public:
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
-        setSpeed(255);
+        setSpeed(0);
         stop();
     }
 
@@ -56,7 +56,6 @@ public:
     {
         leftMotor = left;
         rightMotor = right;
-        stop();
     }
 
     void forward()

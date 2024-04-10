@@ -4,15 +4,16 @@
 
 pub mod motor;
 
-use arduino_hal::{default_serial, simple_pwm::{IntoPwmPin, Prescaler, Timer0Pwm}};
+use arduino_hal::{
+    default_serial, pins, simple_pwm::{IntoPwmPin, Prescaler, Timer0Pwm}, Peripherals
+};
 use motor::{Motor, Network};
 use panic_halt as _;
-use ufmt::uwriteln;
 
 #[arduino_hal::entry]
 fn main() -> ! {
-    let dp = arduino_hal::Peripherals::take().unwrap();
-    let pins = arduino_hal::pins!(dp);
+    let dp = Peripherals::take().unwrap();
+    let pins = pins!(dp);
 
     let timer = Timer0Pwm::new(dp.TC0, Prescaler::Prescale64);
 
@@ -32,15 +33,15 @@ fn main() -> ! {
     let mut serial = default_serial!(dp, pins, 115_200);
 
     loop {
-        uwriteln!(serial, "Forward").unwrap();
-        network.forward();
-        arduino_hal::delay_ms(2000);
-
-        uwriteln!(serial, "Backward").unwrap();
-        network.backward();
-        arduino_hal::delay_ms(2000);
-
-        uwriteln!(serial, "Stop").unwrap();
-        network.stop();
+        let command = serial.read_byte();
+        match command & 0b0000_0111 {
+            0b000 => network.forward(),
+            0b001 => network.backward(),
+            0b010 => network.left(),
+            0b011 => network.right(),
+            0b100 => network.stop(),
+            0b101 => network.set_speed(command & 0b1111_1000),
+            _ => {}
+        }
     }
 }
