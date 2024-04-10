@@ -12,7 +12,7 @@ Motor B(MOTOR_B_1, MOTOR_B_2, ENB);
 
 void setup()
 {
-    Serial.begin(9600);
+    Serial.begin(115200);
     while (!Serial)
         ;
     Serial.println("Ready");
