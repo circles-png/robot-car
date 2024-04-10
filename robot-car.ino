@@ -104,9 +104,9 @@ class Motor {
         int speed = 0;
 
     Motor(int pin1, int pin2, int enable) {
-        this -> pin1 = pin1;
-        this -> pin2 = pin2;
-        this -> enable = enable;
+        this->pin1 = pin1;
+        this->pin2 = pin2;
+        this->enable = enable;
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
@@ -129,11 +129,11 @@ class Motor {
     }
 
     void setSpeed(int speed) {
-        this -> speed = speed;
+        this->speed = speed;
         analogWrite(enable, speed);
     }
 
     int getSpeed() {
-        return this -> speed;
+        return this->speed;
     }
 };
