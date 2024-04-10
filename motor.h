@@ -1,19 +1,15 @@
 class Motor
 {
 public:
-    int pin1;
-    int pin2;
-    int enable;
-
     Motor(int pin1, int pin2, int enable)
     {
-        pin1 = pin1;
-        pin2 = pin2;
-        enable = enable;
+        this->pin1 = pin1;
+        this->pin2 = pin2;
+        this->enable = enable;
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
-        setSpeed(1023);
+        setSpeed(255);
         stop();
     }
 
@@ -47,7 +43,10 @@ public:
     }
 
 private:
-    int speed = 0;
+    int speed;
+    int pin1;
+    int pin2;
+    int enable;
 };
 
 class MotorNetwork
@@ -77,7 +76,6 @@ public:
         leftMotor.backward();
         rightMotor.forward();
     }
-
     void right()
     {
         leftMotor.forward();
