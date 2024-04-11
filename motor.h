@@ -12,8 +12,6 @@ public:
         pinMode(pin1, OUTPUT);
         pinMode(pin2, OUTPUT);
         pinMode(enable, OUTPUT);
-        // Initialise the speed to 0
-        setSpeed(0);
         // Stop the motor
         stop();
     }
@@ -36,23 +34,6 @@ public:
         digitalWrite(pin2, false);
     }
 
-    void setSpeed(int speed)
-    {
-        // Save the speed
-        this->speed = speed;
-        // Set the speed using PWM
-        analogWrite(enable, speed);
-    }
-
-    int getSpeed()
-    {
-        // Return the speed
-        return speed;
-    }
-
-private:
-    // The speed of the motor
-    int speed;
     // Pins for the motor
     int pin1;
     int pin2;
@@ -67,6 +48,7 @@ public:
     {
         leftMotor = left;
         rightMotor = right;
+        setSpeed(255);
     }
 
     void forward()
@@ -76,6 +58,8 @@ public:
         // | |    | |
         //   |    |
         //   +----+
+        analogWrite(leftMotor.enable, this->speed);
+        analogWrite(rightMotor.enable, this->speed);
         leftMotor.forward();
         rightMotor.forward();
     }
@@ -87,6 +71,8 @@ public:
         // | |    | |
         // v |    | v
         //   +----+
+        analogWrite(leftMotor.enable, this->speed);
+        analogWrite(rightMotor.enable, this->speed);
         leftMotor.backward();
         rightMotor.backward();
     }
@@ -98,6 +84,8 @@ public:
         // | |    | |
         // v |    |
         //   +----+
+        analogWrite(leftMotor.enable, this->turnSpeed);
+        analogWrite(rightMotor.enable, this->turnSpeed);
         leftMotor.backward();
         rightMotor.forward();
     }
@@ -108,6 +96,8 @@ public:
         // | |    | |
         //   |    | v
         //   +----+
+        analogWrite(leftMotor.enable, this->turnSpeed);
+        analogWrite(rightMotor.enable, this->turnSpeed);
         leftMotor.forward();
         rightMotor.backward();
     }
@@ -120,16 +110,20 @@ public:
 
     void setSpeed(int speed)
     {
-        leftMotor.setSpeed(speed);
-        rightMotor.setSpeed(speed);
+        this->speed = speed;
+        this->turnSpeed = speed * 0.5;
+        analogWrite(leftMotor.enable, this->speed);
+        analogWrite(rightMotor.enable, this->speed);
     }
 
     int getSpeed()
     {
-        return leftMotor.getSpeed();
+        return speed;
     }
 
 private:
     Motor leftMotor;
     Motor rightMotor;
+    int speed;
+    int turnSpeed;
 };

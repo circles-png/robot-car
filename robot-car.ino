@@ -2,12 +2,16 @@
 #include "motor.h"
 
 // Define the pins for the motors
-#define ENA 6
-#define ENB 5
-#define MOTOR_A_1 11
-#define MOTOR_A_2 10
-#define MOTOR_B_1 9
-#define MOTOR_B_2 8
+#define ENA 5
+#define ENB 6
+#define MOTOR_A_1 10
+#define MOTOR_A_2 11
+#define MOTOR_B_1 8
+#define MOTOR_B_2 9
+#define LEFT_LINE_FINDER A4
+#define RIGHT_LINE_FINDER A5
+#define ULTRASONIC_ECHO A0
+#define ULTRASONIC_TRIGGER A1
 
 // Create a network of motors
 MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_2, ENB));
@@ -57,4 +61,22 @@ void loop()
             break;
         }
     }
+
+#ifdef ULTRASONIC
+    digitalWrite(ULTRASONIC_TRIGGER, false);
+    delayMicroseconds(2);
+
+    digitalWrite(ULTRASONIC_TRIGGER, true);
+    delayMicroseconds(10);
+    digitalWrite(ULTRASONIC_TRIGGER, false);
+
+    long duration = pulseIn(ULTRASONIC_ECHO, true);
+    int distanceCentimetres = duration * 0.034 / 2;
+
+    Serial.write(((analogRead(LEFT_LINE_FINDER) < 512) << 7) | ((analogRead(RIGHT_LINE_FINDER) < 512) << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
+    Serial.write(((distanceCentimetres & 0b00001111) << 4) | 1);
+#else
+    Serial.write(((analogRead(LEFT_LINE_FINDER) < 512) << 7) | ((analogRead(RIGHT_LINE_FINDER) < 512) << 6) | (((0 >> 4) & 0b00011111) << 1));
+    Serial.write(((0 & 0b00001111) << 4) | 1);
+#endif
 }
