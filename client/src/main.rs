@@ -334,7 +334,7 @@ fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
     let left = (buffer >> 15) == 1;
     let right = ((buffer >> 14) & 1) == 1;
     let distance_last_4_bits = (buffer & 0b1111_0000) >> 4;
-    let distance_first_5_bits = (buffer >> 8) & 0b0001_1111;
+    let distance_first_5_bits = (buffer >> 9) & 0b0001_1111;
     let distance_cm = (distance_first_5_bits << 5) | distance_last_4_bits;
     (left, right, distance_cm)
 }

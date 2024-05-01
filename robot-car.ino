@@ -14,8 +14,7 @@
 #define RIGHT_LINE_FINDER A5
 #define ULTRASONIC_ECHO A0
 #define ULTRASONIC_TRIGGER A1
-
-#define ULTRASONIC
+#define IR_RECEIVER 1
 
 // Create a network of motors
 MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_2, ENB));
@@ -29,7 +28,7 @@ void setup()
         ;
 }
 
-IRrecv irrecv(7);
+IRrecv irrecv(1);
 const char *lastCommand = "";
 
 void loop()
@@ -69,36 +68,35 @@ void loop()
         }
     }
 
-    decode_results results;
-    if (irrecv.decode(&results))
-    {
-        switch (results.value)
-        {
-        case 0xDC23B04F: // up
-            lastCommand = "up";
-            break;
-        case 0xDC2308F7: // left
-            lastCommand = "left";
-            break;
-        case 0xDC23A857: // down
-            lastCommand = "down";
-            break;
-        case 0xDC2348B7: // right
-            lastCommand = "right";
-            break;
-        }
-        if (results.value == 0xDC23B04F ||
-            results.value == 0xDC2308F7 ||
-            results.value == 0xDC23A857 ||
-            results.value == 0xDC2348B7 ||
-            results.value == 0xFFFFFFFF)
-        {
-            Serial.println(lastCommand);
-        }
-        irrecv.resume();
-    }
+    // decode_results results;
+    // if (irrecv.decode(&results))
+    // {
+    //     switch (results.value)
+    //     {
+    //     case 0xDC23B04F: // up
+    //         lastCommand = "up";
+    //         break;
+    //     case 0xDC2308F7: // left
+    //         lastCommand = "left";
+    //         break;
+    //     case 0xDC23A857: // down
+    //         lastCommand = "down";
+    //         break;
+    //     case 0xDC2348B7: // right
+    //         lastCommand = "right";
+    //         break;
+    //     }
+    //     if (results.value == 0xDC23B04F ||
+    //         results.value == 0xDC2308F7 ||
+    //         results.value == 0xDC23A857 ||
+    //         results.value == 0xDC2348B7 ||
+    //         results.value == 0xFFFFFFFF)
+    //     {
+    //         Serial.println(lastCommand);
+    //     }
+    //     irrecv.resume();
+    // }
 
-#ifdef ULTRASONIC
     digitalWrite(ULTRASONIC_TRIGGER, false);
     delayMicroseconds(2);
 
@@ -111,8 +109,4 @@ void loop()
 
     Serial.write(((analogRead(RIGHT_LINE_FINDER) < 512) << 7) | ((analogRead(LEFT_LINE_FINDER) < 512) << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
     Serial.write(((distanceCentimetres & 0b00001111) << 4) | 1);
-#else
-    Serial.write(((analogRead(LEFT_LINE_FINDER) < 512) << 7) | ((analogRead(RIGHT_LINE_FINDER) < 512) << 6) | (((0 >> 4) & 0b00011111) << 1));
-    Serial.write(((0 & 0b00001111) << 4) | 1);
-#endif
 }
