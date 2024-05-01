@@ -8,6 +8,8 @@
 )]
 use std::{
     panic::{set_hook, take_hook},
+    sync::{Arc, Mutex},
+    thread::spawn,
     time::{Duration, Instant},
 };
 
@@ -71,9 +73,18 @@ fn main() {
         .open()
         .unwrap();
     let screen = init_window();
+    let data = Arc::new(Mutex::new((false, false, 0)));
+    {
+        let mut port = port.try_clone().unwrap();
+        let data = Arc::clone(&data);
+        spawn(move || loop {
+            let received = recv_data(&mut port);
+            *data.lock().unwrap() = received;
+        });
+    }
     // Main loop
     loop {
-        let (left, right, distance_cm) = recv_data(&mut port);
+        let (left, right, distance_cm) = { *data.lock().unwrap() };
         let char = screen.getch();
         // Match the input to a control
         let control = char.and_then(|char| match char {
@@ -257,9 +268,9 @@ fn draw_car(window: &Window, command: Command, left: bool, right: bool, distance
         window.color_set(0);
     }
     if right {
+        window.color_set(2);
         window.mvaddch(8, 17, '!');
         window.color_set(0);
-        window.color_set(2);
     }
 }
 
