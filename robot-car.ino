@@ -10,10 +10,10 @@
 #define MOTOR_A_2 11
 #define MOTOR_B_1 8
 #define MOTOR_B_2 9
-#define LEFT_LINE_FINDER A4
-#define RIGHT_LINE_FINDER A5
-#define ULTRASONIC_ECHO A0
-#define ULTRASONIC_TRIGGER A1
+#define LEFT_LINE_FINDER 7
+#define RIGHT_LINE_FINDER 4
+#define ULTRASONIC_ECHO A1
+#define ULTRASONIC_TRIGGER A0
 #define IR_RECEIVER 1
 
 // Create a network of motors
@@ -23,6 +23,7 @@ void setup()
 {
     // Setup the serial communication
     Serial.begin(115200);
+    pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
     while (!Serial)
         ;
@@ -97,16 +98,17 @@ void loop()
     //     irrecv.resume();
     // }
 
-    digitalWrite(ULTRASONIC_TRIGGER, false);
+    analogWrite(ULTRASONIC_TRIGGER, 0);
     delayMicroseconds(2);
 
-    digitalWrite(ULTRASONIC_TRIGGER, true);
+    analogWrite(ULTRASONIC_TRIGGER, 255);
     delayMicroseconds(10);
-    digitalWrite(ULTRASONIC_TRIGGER, false);
+    analogWrite(ULTRASONIC_TRIGGER, 0);
 
-    long duration = pulseIn(ULTRASONIC_ECHO, true);
-    int distanceCentimetres = duration * 0.034 / 2;
+    float duration = pulseIn(ULTRASONIC_ECHO, true);
+    float distance = duration * 0.0343 / 2;
+    int distanceCentimetres = distance;
 
-    Serial.write(((analogRead(RIGHT_LINE_FINDER) < 512) << 7) | ((analogRead(LEFT_LINE_FINDER) < 512) << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
+    Serial.write((!digitalRead(RIGHT_LINE_FINDER) << 7) | (!digitalRead(LEFT_LINE_FINDER) << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
     Serial.write(((distanceCentimetres & 0b00001111) << 4) | 1);
 }

@@ -129,7 +129,6 @@ fn main() {
         }
         // Write the command to the serial port
         port.write_all(&[command.to_byte()]).unwrap();
-        screen.refresh();
     }
     // End the curses window when the loop is exited
     endwin();
@@ -331,6 +330,7 @@ fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
         }
     }
     let buffer = u16::from_be_bytes(buffer.map(Option::unwrap));
+    // println!("{:08b} {:08b}", buffer.to_be_bytes()[0], buffer.to_be_bytes()[1]);
     let left = (buffer >> 15) == 1;
     let right = ((buffer >> 14) & 1) == 1;
     let distance_last_4_bits = (buffer & 0b1111_0000) >> 4;
