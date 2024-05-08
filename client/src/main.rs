@@ -1,4 +1,6 @@
+// Tell clippy to ignore certain warnings
 #![warn(clippy::pedantic, clippy::nursery)]
+// Allow some warnings
 #![allow(
     clippy::cast_possible_truncation,
     clippy::cast_sign_loss,
@@ -6,6 +8,8 @@
     clippy::too_many_lines,
     clippy::cast_possible_wrap
 )]
+
+// Import standard library stuff
 use std::{
     panic::{set_hook, take_hook},
     sync::{Arc, Mutex},
@@ -13,13 +17,14 @@ use std::{
     time::{Duration, Instant},
 };
 
+// Import third-party crates
 use inquire::Select;
 use pancurses::{
     endwin, init_pair, initscr, noecho, start_color, use_default_colors, Input, Window,
 };
 use serialport::{available_ports, new, SerialPort};
 
-// Represents commands that can be sent to the robot
+// Represents output commands sent to the robot
 #[derive(Clone, Copy, PartialEq)]
 enum Command {
     Forward,
@@ -46,7 +51,7 @@ impl Command {
     }
 }
 
-// Represents the controls from the user
+// Represents the input controls from the user
 #[derive(Clone, Copy, PartialEq)]
 enum Control {
     Forward,
@@ -59,20 +64,26 @@ enum Control {
 
 // The baud rate of the serial port
 const BAUD_RATE: u32 = 115_200;
+// Initial speed of the robot is 255
 const INITIAL_SPEED: u8 = u8::MAX;
 
 fn main() {
     let name = get_port_name();
     // The time of the last input used for debouncing and stopping the robot
     let mut last_input_time = Instant::now();
+    // The current speed of the robot
     let mut speed = INITIAL_SPEED;
+    // Reset the panic hook so that it cleans up the pancurses screen when panicking
     clean_up_on_panic();
     // Open the serial port
     let mut port = new(name, BAUD_RATE)
         .timeout(Duration::from_millis(500))
         .open()
         .unwrap();
+    // Initialize the pancurses window
     let screen = init_window();
+    // Make an atomic reference counted smart pointer container to hold the mutual exclusion
+    // container which then holds the data received from the robot
     let data = Arc::new(Mutex::new((false, false, 0)));
     {
         let mut port = port.try_clone().unwrap();
@@ -84,6 +95,7 @@ fn main() {
     }
     // Main loop
     loop {
+        // Input received
         let (left, right, distance_cm) = { *data.lock().unwrap() };
         let char = screen.getch();
         // Match the input to a control
@@ -117,11 +129,17 @@ fn main() {
                 Command::Stop
             }
         };
+        // Make a new window for the directional UI
         let keys_window = screen.subwin(7, 15, 1, 2).unwrap();
+        // Draw the directions to the window
         draw_keys(&keys_window, command);
+        // Make a new window for the speed UI
         let speed_window = screen.subwin(7, 255 / 3 + 3, 1, 19).unwrap();
+        // Draw the speed to the window
         draw_speed(&speed_window, speed);
+        // Make a new window for the car UI
         let car_window = screen.subwin(22, 28, 8, 2).unwrap();
+        // Draw the car, including ultrasonic and line-following sensors, to the window
         draw_car(&car_window, command, left, right, distance_cm);
         // If a control is received, update the last input time
         if control.is_some() {
@@ -134,24 +152,35 @@ fn main() {
     endwin();
 }
 
+// Draws the speed to the speed window
 fn draw_speed(window: &Window, speed: u8) {
+    // Clears the window
     window.clear();
+    // Draw the border
     window.border('|', '|', '-', '-', '+', '+', '+', '+');
+    // Move to (3, 1) relative to the speed window and write some dashes
     window.mvaddstr(3, 1, "-".repeat(255 / 3 + 1));
+    // Change to red
     window.color_set(2);
+    // For each line in the window, draw a pipe character at the same abscissa
     for line in 1..=5 {
         window.mvaddch(line, i32::from(speed) / 3 + 1, '|');
     }
+    // Reset the colour
     window.color_set(0);
 }
 
+// Draws the arrow keys to the directional window
 fn draw_keys(window: &Window, command: Command) {
+    // Draw the border
     window.border('|', '|', '-', '-', '+', '+', '+', '+');
+    // Define a function to draw a square at some position
     let draw_key = |window: &Window, x, y| {
         window.mvaddstr(y, x, "+---+");
         window.mvaddstr(y + 1, x, "|   |");
         window.mvaddstr(y + 2, x, "+---+");
     };
+    // Define a function to reset all the keys
     let reset_keys = || {
         window.mvaddstr(1, 5, "+---+");
         window.mvaddstr(2, 5, "|   |");
@@ -159,36 +188,29 @@ fn draw_keys(window: &Window, command: Command) {
         window.mvaddstr(4, 1, "|   |   |   |");
         window.mvaddstr(5, 1, "+---+---+---+");
     };
-    match command {
-        Command::Forward => {
-            reset_keys();
-            window.color_set(1);
-            draw_key(window, 5, 1);
-            window.color_set(0);
-        }
-        Command::Backward => {
-            reset_keys();
-            window.color_set(1);
-            draw_key(window, 5, 3);
-            window.color_set(0);
-        }
-        Command::Left => {
-            reset_keys();
-            window.color_set(1);
-            draw_key(window, 1, 3);
-            window.color_set(0);
-        }
-        Command::Right => {
-            reset_keys();
-            window.color_set(1);
-            draw_key(window, 9, 3);
-            window.color_set(0);
-        }
-        Command::Stop => {
-            reset_keys();
-        }
-        Command::SetSpeed(_) => {}
-    }
+    // Match the command to a key position.
+    // None               The keys should not be reset or drawn
+    // Some(None)         The keys should be reset, but not drawn
+    // Some(Some(x, y))   The keys should be reset and drawn at (x, y)
+    let Some(inner) = (match command {
+        Command::Forward => Some(Some((5, 1))),
+        Command::Backward => Some(Some((5, 3))),
+        Command::Left => Some(Some((1, 3))),
+        Command::Right => Some(Some((9, 3))),
+        Command::Stop => Some(None),
+        Command::SetSpeed(_) => None,
+    }) else {
+        return;
+    };
+    // Reset the keys
+    reset_keys();
+    let Some((x, y)) = inner else {
+        return;
+    };
+    // Change to black foreground and white background
+    window.color_set(1);
+    draw_key(window, x, y);
+    window.color_set(0);
 }
 
 fn draw_car(window: &Window, command: Command, left: bool, right: bool, distance_cm: u16) {
@@ -330,7 +352,6 @@ fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
         }
     }
     let buffer = u16::from_be_bytes(buffer.map(Option::unwrap));
-    // println!("{:08b} {:08b}", buffer.to_be_bytes()[0], buffer.to_be_bytes()[1]);
     let left = (buffer >> 15) == 1;
     let right = ((buffer >> 14) & 1) == 1;
     let distance_last_4_bits = (buffer & 0b1111_0000) >> 4;
