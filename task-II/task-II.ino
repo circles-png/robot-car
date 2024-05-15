@@ -24,8 +24,14 @@ void loop()
     float distance = duration * 0.0343 / 2;
     int distanceCentimetres = distance;
 
-    char out[32];
-    sprintf(out, "Distance (cm): %i", distanceCentimetres);
-
-    Serial.println(out);
+    Serial.print("[--] <- ");
+    for (int i = 0; i < distanceCentimetres / 60; i ++) {
+        Serial.print("-- ");
+    }
+    Serial.print(distanceCentimetres);
+    Serial.print(" cm ");
+    for (int i = 0; i < distanceCentimetres / 60; i ++) {
+        Serial.print("-- ");
+    }
+    Serial.println("-> |");
 }
