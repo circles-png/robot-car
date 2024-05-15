@@ -16,6 +16,8 @@
 #define ULTRASONIC_TRIGGER A0
 #define IR_RECEIVER 1
 
+#define EDGE_FOLL
+
 // Create a network of motors
 MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_2, ENB));
 
@@ -30,10 +32,70 @@ void setup()
 }
 
 IRrecv irrecv(1);
-const char *lastCommand = "";
+
+#ifdef IR_RECEIVER
+enum IrCommand
+{
+    up,
+    left,
+    down,
+    right
+};
+IrCommand lastCommand;
+unsigned long lastCommandTime;
+void handleCommand(IrCommand command)
+{
+    switch (command)
+    {
+    case IrCommand::up:
+
+        break;
+    case IrCommand::left:
+
+        break;
+    case IrCommand::down:
+
+        break;
+    case IrCommand::right:
+
+        break;
+    }
+}
+#endif
 
 void loop()
 {
+#ifdef IR_RECEIVER
+    decode_results results;
+    if (irrecv.decode(&results))
+    {
+        switch (results.value)
+        {
+        case 0xDC23B04F: // up
+            lastCommand = IrCommand::up;
+            break;
+        case 0xDC2308F7: // left
+            lastCommand = IrCommand::left;
+            break;
+        case 0xDC23A857: // down
+            lastCommand = IrCommand::down;
+            break;
+        case 0xDC2348B7: // right
+            lastCommand = IrCommand::right;
+            break;
+        }
+        if (results.value == 0xDC23B04F ||
+            results.value == 0xDC2308F7 ||
+            results.value == 0xDC23A857 ||
+            results.value == 0xDC2348B7 ||
+            results.value == 0xFFFFFFFF)
+        {
+            handleCommand(lastCommand);
+            lastCommandTime = millis();
+        }
+        irrecv.resume();
+    }
+#else
     // Check if there is any data available on the serial port
     while (Serial.available() > 0)
     {
@@ -68,7 +130,7 @@ void loop()
             break;
         }
     }
-
+#endif
     analogWrite(ULTRASONIC_TRIGGER, 0);
     delayMicroseconds(2);
 
