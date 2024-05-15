@@ -13,5 +13,6 @@ void setup()
 
 void loop()
 {
+    // Print the line finder results
     Serial.println((!digitalRead(RIGHT_LINE_FINDER) << 7) | (!digitalRead(LEFT_LINE_FINDER) << 6));
 }
