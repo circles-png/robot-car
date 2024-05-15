@@ -121,7 +121,6 @@ public:
         return speed;
     }
 
-private:
     Motor leftMotor;
     Motor rightMotor;
     int speed;

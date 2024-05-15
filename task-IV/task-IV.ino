@@ -1,4 +1,7 @@
 #include "include/defines.h"
+#include "include/motor.h"
+
+MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_2, ENB));
 
 void setup()
 {
@@ -33,5 +36,15 @@ void loop()
         Serial.print("-- ");
     }
     Serial.println("-> |");
-    delay(50);
+
+    if (distanceCentimetres > 10) {
+        network.forward();
+    }
+    else
+    {
+        network.backward();
+        delay(500);
+        network.left();
+        delay(500);
+    }
 }
