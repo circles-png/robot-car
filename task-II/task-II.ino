@@ -25,5 +25,5 @@ void loop()
     float distance = duration * 0.0343 / 2;
     int distanceCentimetres = distance;
 
-    Serial.print(distanceCentimetres);
+    Serial.println(distanceCentimetres);
 }
