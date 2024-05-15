@@ -14,7 +14,7 @@
 #define RIGHT_LINE_FINDER 4
 #define ULTRASONIC_ECHO A1
 #define ULTRASONIC_TRIGGER A0
-#define IR_RECEIVER 1
+// #define IR_RECEIVER 1
 
 #define EDGE_FOLL
 
