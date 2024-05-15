@@ -1,6 +1,5 @@
-// Define the pins for the infrared sensors
-#include "../defines.h"
-#include "../motor.h"
+#include "include/defines.h"
+#include "include/motor.h"
 
 void setup()
 {
