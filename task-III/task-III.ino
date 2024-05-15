@@ -12,6 +12,7 @@ void setup()
 
 void loop()
 {
-    // Print the line finder results
-    Serial.println((!digitalRead(RIGHT_LINE_FINDER) << 7) | (!digitalRead(LEFT_LINE_FINDER) << 6));
+    char out[128];
+    sprintf(out, "Left (1 if covered else 0):%i Right (1 if covered else 0):%i", !digitalRead(LEFT_LINE_FINDER), !digitalRead(RIGHT_LINE_FINDER));
+    Serial.println(out);
 }
