@@ -24,9 +24,6 @@ void loop()
     int distanceCentimetres = distance;
 
     Serial.print("[--] <- ");
-    for (int i = 0; i < distanceCentimetres / 60; i ++) {
-        Serial.print("-- ");
-    }
     Serial.print(distanceCentimetres);
     Serial.print(" cm ");
     for (int i = 0; i < distanceCentimetres / 60; i ++) {
