@@ -82,14 +82,19 @@ fn main() {
         .unwrap();
     // Initialize the pancurses window
     let screen = init_window();
-    // Make an atomic reference counted smart pointer container to hold the mutual exclusion
-    // container which then holds the data received from the robot
+    // Make an atomic reference counted (Arc) smart pointer container to hold the mutual exclusion
+    // container (Mutex) which then holds the data received from the robot
     let data = Arc::new(Mutex::new((false, false, 0)));
     {
+        // Clone the port handle so that it can be moved into the thread
         let mut port = port.try_clone().unwrap();
+        // Clone the Arc
         let data = Arc::clone(&data);
+        // Spawn a thread to receive data from the serial port
         spawn(move || loop {
+            // Receive data from the serial port
             let received = recv_data(&mut port);
+            // Lock the data Mutex and put the data in it
             *data.lock().unwrap() = received;
         });
     }
@@ -207,16 +212,20 @@ fn draw_keys(window: &Window, command: Command) {
     let Some((x, y)) = inner else {
         return;
     };
-    // Change to black foreground and white background
+    // Draw the key on a black foreground and a white background
     window.color_set(1);
     draw_key(window, x, y);
     window.color_set(0);
 }
 
 fn draw_car(window: &Window, command: Command, left: bool, right: bool, distance_cm: u16) {
+    // Define a reset function to clear the car window
     let reset = || {
+        // Clear the window
         window.clear();
+        // Draw a border
         window.border('|', '|', '-', '-', '+', '+', '+', '+');
+        // For each index and line of the image, draw it to the window
         for (index, line) in [
             r"   [------------]",
             r"         ||",
@@ -245,7 +254,9 @@ fn draw_car(window: &Window, command: Command, left: bool, right: bool, distance
             window.mvaddstr(index as i32 + 1, 4, line);
         }
     };
+    // Call reset to reset the window
     reset();
+    // Match the command to a drawing
     match command {
         Command::Forward => {
             window.mvaddch(12, 2, '^');
@@ -282,7 +293,9 @@ fn draw_car(window: &Window, command: Command, left: bool, right: bool, distance
         Command::Stop => reset(),
         Command::SetSpeed(_) => {}
     }
+    // Write the distance to the window
     window.mvaddstr(4, 1, format!("{:^26}", format!("{} cm", distance_cm)));
+    // Display the status of the infrared sensors
     if left {
         window.color_set(2);
         window.mvaddch(8, 10, '!');
@@ -337,13 +350,19 @@ fn init_window() -> Window {
 }
 
 fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
+    // Create a buffer of two bytes
     let mut buffer = [None; 2];
+    // While the buffer is not full, read some data into it
     while !buffer.iter().all(Option::is_some) {
+        // Make a buffer of one byte
         let mut byte = [0];
+        // Read from the port into the buffer
         if port.read_exact(&mut byte).is_err() {
             continue;
         };
+        // Take the byte out of the array
         let byte = byte[0];
+        // Match the last bit and write into the two byte buffer accordingly
         match byte & 0b0000_0001 {
             kind @ (0 | 1) => {
                 buffer[kind as usize] = Some(byte);
@@ -351,7 +370,9 @@ fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
             _ => unreachable!(),
         }
     }
+    // Make a u16 out of the bytes
     let buffer = u16::from_be_bytes(buffer.map(Option::unwrap));
+    //
     let left = (buffer >> 15) == 1;
     let right = ((buffer >> 14) & 1) == 1;
     let distance_last_4_bits = (buffer & 0b1111_0000) >> 4;

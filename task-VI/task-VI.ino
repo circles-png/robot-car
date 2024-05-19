@@ -15,6 +15,7 @@ void setup()
         ;
 }
 
+// I reckon V
 IRrecv irrecv(1);
 
 #ifdef IR_RECEIVER
@@ -32,16 +33,16 @@ void handleCommand(IrCommand command)
     switch (command)
     {
     case IrCommand::up:
-
+        network.forward();
         break;
     case IrCommand::left:
-
+        network.left();
         break;
     case IrCommand::down:
-
+        network.backward();
         break;
     case IrCommand::right:
-
+        network.right();
         break;
     }
 }
@@ -78,6 +79,10 @@ void loop()
             lastCommandTime = millis();
         }
         irrecv.resume();
+    }
+    if (millis() - lastCommandTime > 400)
+    {
+        network.stop();
     }
 #else
     // Check if there is any data available on the serial port
