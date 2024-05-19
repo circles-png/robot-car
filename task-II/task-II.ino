@@ -8,7 +8,6 @@ void setup()
     pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
     while (!Serial)
-        // ✨✨nothing✨✨
         ;
 }
 
