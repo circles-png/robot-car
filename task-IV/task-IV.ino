@@ -29,21 +29,21 @@ void loop()
     float duration = pulseIn(ULTRASONIC_ECHO, true);
     // Calculate the distance by multiplying the duration by a fraction of the speed of light
     float distance = duration * 0.0343 / 2;
-    // Conver the distance to an integer
+    // Convert the distance to an integer
     int distanceCentimetres = distance;
+
+    // If the distance is more than the max range, ignore it
+    if (distanceCentimetres > 400)
+    {
+        return;
+    }
 
     // Print a model of the car to the serial monitor
     Serial.print("[--] <- ");
-    // Print some dashes
-    for (int i = 0; i < distanceCentimetres / 60; i++)
-    {
-        Serial.print("-- ");
-    }
-    // Print the distance to the serial monitor
     Serial.print(distanceCentimetres);
     Serial.print(" cm ");
     // Print some more dashes
-    for (int i = 0; i < distanceCentimetres / 60; i++)
+    for (int i = 0; i < distanceCentimetres / 10; i++)
     {
         Serial.print("-- ");
     }
