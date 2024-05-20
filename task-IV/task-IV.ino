@@ -41,9 +41,10 @@ void loop()
 
     // Print a model of the car to the serial monitor
     Serial.print("[--] <- ");
+    // Print the distance to the serial monitor
     Serial.print(distanceCentimetres);
     Serial.print(" cm ");
-    // Print some more dashes
+    // Print some dashes
     for (int i = 0; i < distanceCentimetres / 10; i++)
     {
         Serial.print("-- ");
