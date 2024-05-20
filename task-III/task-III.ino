@@ -1,3 +1,4 @@
+// Include the pins and other parameters at compile time
 #include "include/defines.h"
 
 void setup()
