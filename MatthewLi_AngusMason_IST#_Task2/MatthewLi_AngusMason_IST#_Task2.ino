@@ -3,8 +3,11 @@
 // Include the pins and other parameters at compile time
 #include "include/defines.h"
 
+unsigned long startTime;
+
 void setup()
 {
+    startTime = millis();
     // Setup the serial communication
     Serial.begin(115200);
   
@@ -39,7 +42,9 @@ void loop()
     }
 
     // Print a model of the car to the serial monitor
-    Serial.print("[--] <- ");
+    Serial.print("[");
+    Serial.print(millis() - startTime);
+    Serial.print(" ms] <- ");
     // Print the distance to the serial monitor
     Serial.print(distanceCentimetres);
     Serial.print(" cm ");
@@ -49,6 +54,6 @@ void loop()
         Serial.print("-- ");
     }
     Serial.println("-> |");
-    // Wait for 50 milliseconds
-    delay(50);
+    // Wait for 500 milliseconds
+    delay(500);
 }

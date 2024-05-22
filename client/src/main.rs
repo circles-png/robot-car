@@ -372,7 +372,7 @@ fn recv_data(port: &mut Box<dyn SerialPort>) -> (bool, bool, u16) {
     }
     // Make a u16 out of the bytes
     let buffer = u16::from_be_bytes(buffer.map(Option::unwrap));
-    //
+    // Decode the data out of the buffer
     let left = (buffer >> 15) == 1;
     let right = ((buffer >> 14) & 1) == 1;
     let distance_last_4_bits = (buffer & 0b1111_0000) >> 4;
