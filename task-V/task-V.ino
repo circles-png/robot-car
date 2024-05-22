@@ -16,21 +16,22 @@ void setup()
 
 void loop()
 {
+    network.setSpeed(120);
     // Move left or right depending on the status of the line finders
-    if (digitalRead(LEFT_LINE_FINDER))
+    if (LEFT && RIGHT)
     {
-        network.rightMotor.backward();
+        network.forward();
+    }
+    else if (LEFT)
+    {
+        network.right();
+    }
+    else if (RIGHT)
+    {
+        network.left();
     }
     else
     {
-        network.rightMotor.forward();
-    }
-    if (digitalRead(RIGHT_LINE_FINDER))
-    {
-        network.leftMotor.backward();
-    }
-    else
-    {
-        network.leftMotor.forward();
+        network.stop();
     }
 }

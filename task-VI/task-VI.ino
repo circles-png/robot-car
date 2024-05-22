@@ -131,6 +131,6 @@ void loop()
     float distance = duration * 0.0343 / 2;
     int distanceCentimetres = distance;
 
-    Serial.write((!digitalRead(RIGHT_LINE_FINDER) << 7) | (!digitalRead(LEFT_LINE_FINDER) << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
+    Serial.write((RIGHT << 7) | (LEFT << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
     Serial.write(((distanceCentimetres & 0b00001111) << 4) | 1);
 }

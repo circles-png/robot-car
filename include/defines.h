@@ -10,3 +10,6 @@
 #define ULTRASONIC_ECHO A1
 #define ULTRASONIC_TRIGGER A0
 // #define IR_RECEIVER 1
+
+#define LEFT !digitalRead(LEFT_LINE_FINDER)
+#define RIGHT !digitalRead(RIGHT_LINE_FINDER)
