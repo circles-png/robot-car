@@ -7,7 +7,8 @@ void setup()
 {
     // Setup the serial communication
     Serial.begin(115200);
-    pinMode(ULTRASONIC_TRIGGER, OUTPUT);
+  
+   pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
     while (!Serial)
         ;
