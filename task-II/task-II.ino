@@ -1,3 +1,5 @@
+// Task II - Display the distance detected by the ultrasonic sensor
+
 // Include the pins and other parameters at compile time
 #include "include/defines.h"
 
