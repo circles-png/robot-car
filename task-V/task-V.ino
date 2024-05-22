@@ -1,3 +1,6 @@
+// Task V - Control the robot depending on the status of the line finders
+
+// Include the pins and other parameters at compile time
 #include "include/defines.h"
 #include "include/motor.h"
 
