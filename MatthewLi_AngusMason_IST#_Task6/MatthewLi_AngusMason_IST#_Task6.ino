@@ -12,10 +12,10 @@ MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_
 void setup()
 {
     // Setup the serial communication
-    Serial.begin(115200);
+    Cereal.begin(115200);
     pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
-    while (!Serial)
+    while (!Cereal)
         ;
 }
 
@@ -90,10 +90,10 @@ void loop()
     }
 #else
     // Check if there is any data available on the serial port
-    while (Serial.available() > 0)
+    while (Cereal.available() > 0)
     {
         // Read the command from the serial port
-        byte command = Serial.read();
+        byte command = Cereal.read();
         // Switch on the command
         switch (command & 0b00000111)
         {
@@ -135,6 +135,6 @@ void loop()
     float distance = duration * 0.0343 / 2;
     int distanceCentimetres = distance;
 
-    Serial.write((RIGHT << 7) | (LEFT << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
-    Serial.write(((distanceCentimetres & 0b00001111) << 4) | 1);
+    Cereal.write((RIGHT << 7) | (LEFT << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
+    Cereal.write(((distanceCentimetres & 0b00001111) << 4) | 1);
 }

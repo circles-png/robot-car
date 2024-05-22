@@ -13,3 +13,5 @@
 
 #define LEFT !digitalRead(LEFT_LINE_FINDER)
 #define RIGHT !digitalRead(RIGHT_LINE_FINDER)
+
+#define Cereal Serial

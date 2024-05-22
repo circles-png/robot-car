@@ -10,10 +10,10 @@ MotorNetwork network(Motor(MOTOR_A_1, MOTOR_A_2, ENA), Motor(MOTOR_B_1, MOTOR_B_
 void setup()
 {
     // Setup the serial communication
-    Serial.begin(115200);
+    Cereal.begin(115200);
     pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
-    while (!Serial)
+    while (!Cereal)
         ;
 }
 

@@ -6,9 +6,9 @@
 void setup()
 {
     // Setup the serial communication
-    Serial.begin(115200);
+    Cereal.begin(115200);
     // Wait for the serial connection to be established
-    while (!Serial)
+    while (!Cereal)
         ;
 }
 
@@ -19,7 +19,7 @@ void loop()
     // Format the string (second argument) and put the result into out
     sprintf(out, "Left [%c]  ----  [%c] Right", LEFT ? '!' : ' ', RIGHT ? '!' : ' ');
     // Print out to the serial monitor
-    Serial.println(out);
-    // Wait for 50 milliseconds
-    delay(50);
+    Cereal.println(out);
+    // Wait for 500 milliseconds
+    delay(500);
 }
