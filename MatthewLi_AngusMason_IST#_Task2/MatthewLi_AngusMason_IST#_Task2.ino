@@ -1,3 +1,5 @@
+// Task II - Display the distance detected by the ultrasonic sensor
+
 // Include the pins and other parameters at compile time
 #include "include/defines.h"
 
@@ -8,7 +10,8 @@ void setup()
     startTime = millis();
     // Setup the serial communication
     Serial.begin(115200);
-    pinMode(ULTRASONIC_TRIGGER, OUTPUT);
+  
+   pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     // Wait for the serial connection to be established
     while (!Serial)
         ;

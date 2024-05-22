@@ -1,3 +1,7 @@
+// Task VI - Control the robot with binary serial input from a Rust client (../client).
+// Use an IR receiver to provide another control method.
+
+// Include the pins and other parameters at compile time
 #include <IRremote.h>
 #include "include/defines.h"
 #include "include/motor.h"
@@ -15,7 +19,7 @@ void setup()
         ;
 }
 
-// I reckon V
+// Initialise an infrared receiver interface
 IRrecv irrecv(1);
 
 #ifdef IR_RECEIVER

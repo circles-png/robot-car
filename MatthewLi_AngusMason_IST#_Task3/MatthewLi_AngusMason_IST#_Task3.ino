@@ -1,3 +1,5 @@
+// Task III - Display the status of the line finders
+
 // Include the pins and other parameters at compile time
 #include "include/defines.h"
 
