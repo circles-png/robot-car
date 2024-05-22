@@ -16,18 +16,21 @@ public:
         stop();
     }
 
+    // Drives the motor forwards
     void forward()
     {
         digitalWrite(pin1, true);
         digitalWrite(pin2, false);
     }
 
+    // Drives the motor backwards
     void backward()
     {
         digitalWrite(pin1, false);
         digitalWrite(pin2, true);
     }
 
+    // Stops the motor
     void stop()
     {
         digitalWrite(pin1, false);
