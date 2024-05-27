@@ -37,4 +37,5 @@ void loop()
     {
         network.stop();
     }
+    delay(200);
 }
