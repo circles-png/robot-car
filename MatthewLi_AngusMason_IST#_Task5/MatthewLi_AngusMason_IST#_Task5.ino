@@ -27,11 +27,11 @@ void loop()
     }
     else if (LEFT)
     {
-        network.right();
+        network.left();
     }
     else if (RIGHT)
     {
-        network.left();
+        network.right();
     }
     else
     {
