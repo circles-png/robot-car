@@ -60,6 +60,7 @@ enum Control {
     Right,
     SetSpeed(u8),
     Quit,
+    Stop,
 }
 
 // The baud rate of the serial port
@@ -116,6 +117,7 @@ fn main() {
                 Some(Control::SetSpeed(speed))
             }
             Input::Character('q') => Some(Control::Quit),
+            Input::Character('x') => Some(Control::Stop),
             _ => None,
         });
         // Match the control to a command
@@ -133,6 +135,7 @@ fn main() {
                 }
                 Command::Stop
             }
+            Some(Control::Stop) => Command::Stop,
         };
         // Make a new window for the directional UI
         let keys_window = screen.subwin(7, 15, 1, 2).unwrap();

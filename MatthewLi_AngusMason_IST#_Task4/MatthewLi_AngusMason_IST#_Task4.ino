@@ -16,6 +16,7 @@ void setup()
     // Wait for the serial connection to be established
     while (!Cereal)
         ;
+    network.forward();
 }
 
 void loop()

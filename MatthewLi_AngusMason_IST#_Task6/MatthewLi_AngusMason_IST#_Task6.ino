@@ -137,4 +137,5 @@ void loop()
 
     Cereal.write((RIGHT << 7) | (LEFT << 6) | (((distanceCentimetres >> 4) & 0b00011111) << 1));
     Cereal.write(((distanceCentimetres & 0b00001111) << 4) | 1);
+    delay(50);
 }

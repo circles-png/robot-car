@@ -1,6 +1,3 @@
-#include "defines.h"
-#include "motor.h"
-
 int distanceCentimetres()
 {
     // Set the ultrasonic trigger to low for 2 microseconds

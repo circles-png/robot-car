@@ -19,7 +19,7 @@ void setup()
 
 void loop()
 {
-    network.setSpeed(120);
+    network.setSpeed(255);
     // Move left or right depending on the status of the line finders
     if (LEFT && RIGHT)
     {
